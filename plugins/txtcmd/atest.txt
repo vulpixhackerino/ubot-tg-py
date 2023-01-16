@@ -1,5 +1,0 @@
-﻿%a%
-Test della lettura animata da file...
-3
-Dovrebbero passare 3 secondi senza che succeda qualcosa, o c'è qualcosa che non va
-%end%
