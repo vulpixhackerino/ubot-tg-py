@@ -24,6 +24,9 @@ def isfloat(num):
         return True
     except ValueError:
         return False
+"""
+
+WIP
 
 def txtcmd():  # Converte i file di testo in comandi utilizzabili da comanditxt
     global cmdlist
@@ -39,6 +42,7 @@ def txtcmd():  # Converte i file di testo in comandi utilizzabili da comanditxt
         i += 1
     os.chdir(root)
     return comandi
+"""
 
 def sounds():  # Converte i file di testo in comandi utilizzabili da sounds
     global sblist
@@ -56,19 +60,19 @@ def sounds():  # Converte i file di testo in comandi utilizzabili da sounds
     return soundboard
 
 def clips():  # Converte i file di testo in comandi utilizzabili da clips
-    global sblist
-    sblist = "Tutti i suoni disponibili:\n"
+    global cliplist
+    cliplist = "Tutti i suoni disponibili:\n"
     root = os.getcwd()
     os.chdir(os.getcwd() + "/plugins/clips/")
     files = os.listdir(os.getcwd())
-    soundboard = []
+    clips = []
     i = 0
     for x in files:
-        soundboard.append(x.split(".")[0])
-        sblist = sblist + "-" + soundboard[i] + "\n"
+        clips.append(x.split(".")[0])
+        cliplist = cliplist + "-" + clips[i] + "\n"
         i += 1
     os.chdir(root)
-    return soundboard
+    return clips
 
 @Client.on_message(filters.command("corsivo", "-") & filters.me)
 def corsivo(client, message):
@@ -113,13 +117,6 @@ def copycmd(client, message):
         file.close()
         client.edit_message_text(chat_id=message.chat.id, message_id=message.id, text="✅ Messaggio copiato!",
                                  disable_web_page_preview=True)
-
-
-@Client.on_message(filters.command("txtcmd", "-") & filters.me)
-def allcmdlist(client, message):
-    client.edit_message_text(chat_id=message.chat.id, message_id=message.id, text=cmdlist,
-                             disable_web_page_preview=True)
-
 
 @Client.on_message(filters.command("sblist", "-") & filters.me)
 def allsblist(client, message):
@@ -215,15 +212,20 @@ def clip(client, message):  # Soundboard
     else:
         client.send_video(message.chat.id, video=file)
     client.delete_messages(message.chat.id, message.id, True)
+"""
 
 @Client.on_message(filters.command("txtcmd", '-') & filters.me)  # Mostra tutti i txtcmd
 def showtxtcmd(client, message):  # Soundboard
     client.edit_message_text(message.chat.id, message.id, cmdlist, disable_web_page_preview=True)
-
+"""
 
 @Client.on_message(filters.command("sb", '-') & filters.me)  # Gestisce tutta la soundboard
 def showsb(client, message):  # Soundboard
     client.edit_message_text(message.chat.id, message.id, sblist, disable_web_page_preview=True)
+
+@Client.on_message(filters.command("clips", '-') & filters.me)  # Gestisce tutta la soundboard
+def showsb(client, message):  # Soundboard
+    client.edit_message_text(message.chat.id, message.id, cliplist, disable_web_page_preview=True)
 
 @Client.on_message(filters.command("dice", '-') & filters.me)
 def dice(client, message):
