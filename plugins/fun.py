@@ -53,24 +53,26 @@ def sounds():  # Converte i file di testo in comandi utilizzabili da sounds
     soundboard = []
     i = 0
     for x in files:
-        soundboard.append(x.split(".")[0])
-        sblist = sblist + "-" + soundboard[i] + "\n"
-        i += 1
+        if x.endswith(".mp3"):
+            soundboard.append(x.split(".")[0])
+            sblist = sblist + "-" + soundboard[i] + "\n"
+            i += 1
     os.chdir(root)
     return soundboard
 
 def clips():  # Converte i file di testo in comandi utilizzabili da clips
     global cliplist
-    cliplist = "Tutti i suoni disponibili:\n"
+    cliplist = "Tutte le clip disponibili:\n"
     root = os.getcwd()
     os.chdir(os.getcwd() + "/plugins/clips/")
     files = os.listdir(os.getcwd())
     clips = []
     i = 0
     for x in files:
-        clips.append(x.split(".")[0])
-        cliplist = cliplist + "-" + clips[i] + "\n"
-        i += 1
+        if x.endswith(".mp4"):
+            clips.append(x.split(".")[0])
+            cliplist = cliplist + "-" + clips[i] + "\n"
+            i += 1
     os.chdir(root)
     return clips
 
