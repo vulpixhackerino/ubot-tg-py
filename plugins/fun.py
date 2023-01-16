@@ -40,11 +40,26 @@ def txtcmd():  # Converte i file di testo in comandi utilizzabili da comanditxt
     os.chdir(root)
     return comandi
 
-def sounds():  # Converte i file di testo in comandi utilizzabili da comanditxt
+def sounds():  # Converte i file di testo in comandi utilizzabili da sounds
     global sblist
     sblist = "Tutti i suoni disponibili:\n"
     root = os.getcwd()
     os.chdir(os.getcwd() + "/plugins/sounds/")
+    files = os.listdir(os.getcwd())
+    soundboard = []
+    i = 0
+    for x in files:
+        soundboard.append(x.split(".")[0])
+        sblist = sblist + "-" + soundboard[i] + "\n"
+        i += 1
+    os.chdir(root)
+    return soundboard
+
+def clips():  # Converte i file di testo in comandi utilizzabili da clips
+    global sblist
+    sblist = "Tutti i suoni disponibili:\n"
+    root = os.getcwd()
+    os.chdir(os.getcwd() + "/plugins/clips/")
     files = os.listdir(os.getcwd())
     soundboard = []
     i = 0
@@ -168,52 +183,11 @@ def moon(client, message):
     moon_list = ["🌕", "🌖", "🌗", "🌘", "🌑", "🌒", "🌓", "🌔"]
     for x in range(30):
         moon_list = moon_list[-1:] + moon_list[:-1]
-        client.edit_message_text(chat_id=message.chat.id, message_id=message.id, text=''.join(moon_list[:5]),
+        text = ''.join(moon_list[:5]) + " "
+        client.edit_message_text(chat_id=message.chat.id, message_id=message.id, text=text,
                                  disable_web_page_preview=True)
         time.sleep(0.1)
-
-@Client.on_message(filters.command(txtcmd(), '-') & filters.me)  # Gestisce tutti i file di testo con comandi funny
-def comanditxt(client, message):
-    file = open("plugins/txtcmd/" + message.command[0] + '.txt', 'r', encoding='utf-8-sig')
-    # print(cmdlist)
-    mex = file.readline()
-    cavallo = file.read()
-    file.close()
-    if "%a%" in mex.split(" ") or "%a%" in mex.split('\n'):
-        file = open("plugins/txtcmd/" + message.command[0] + '.txt', 'r', encoding='utf-8-sig')
-        file.readline()
-        text = ""
-        while True:
-            mex = file.readline()
-            if isfloat(mex):
-                time.sleep(float(mex))
-                client.edit_message_text(message.chat.id, message.id, text, disable_web_page_preview=True)
-                text = ""
-            elif mex == "%end%":
-                client.edit_message_text(message.chat.id, message.id, text, disable_web_page_preview=True)
-                break
-            else:
-                text = text + mex
-    elif "%reply%" in mex.split(" ") or "%reply%" in mex.split('\n'):
-        if message.reply_to_message is None:
-            client.delete_messages(message.chat.id, message.id, True)
-            return
-        else:
-            try:
-                usr = message.reply_to_message.from_user.username
-                name = message.reply_to_message.from_user.first_name
-                mex = mex.replace("%name%", name).replace("%user%", '@' + usr).replace("%reply% ", '')
-            except:
-                name = message.reply_to_message.from_user.first_name
-                mex = mex.replace("%name%", name).replace("%reply% ", '')
-            try:
-                mex = mex.replace("%self%", "@" + client.get_me().username)
-            except:
-                mex = mex.replace("%self%", client.get_me().first_name)
-        client.edit_message_text(message.chat.id, message.id, mex, disable_web_page_preview=True)
-    else:
-        client.edit_message_text(message.chat.id, message.id, cavallo, disable_web_page_preview=True)
-
+        
 @Client.on_message(filters.command("spaziato", '-') & filters.me)
 def spaziato(client, message):
     textns = message.text[10::]
@@ -226,10 +200,21 @@ def spaziato(client, message):
 def sbcmd(client, message):  # Soundboard
     print(message.command)
     file = "plugins/sounds/" + message.command[0] + '.mp3'
-    print(file)
-    client.send_audio(message.chat.id, audio=file)
+    if message.reply_to_message is not None:
+        client.send_audio(message.chat.id, audio=file, reply_to_message_id=message.reply_to_message_id)
+    else:
+        client.send_audio(message.chat.id, audio=file)
     client.delete_messages(message.chat.id, message.id, True)
 
+@Client.on_message(filters.command(clips(), '-') & filters.me)  # Gestisce tutta la soundboard
+def clip(client, message):  # Soundboard
+    print(message.command)
+    file = "plugins/clips/" + message.command[0] + '.mp4'
+    if message.reply_to_message is not None:
+        client.send_video(message.chat.id, video=file, reply_to_message_id=message.reply_to_message_id)
+    else:
+        client.send_video(message.chat.id, video=file)
+    client.delete_messages(message.chat.id, message.id, True)
 
 @Client.on_message(filters.command("txtcmd", '-') & filters.me)  # Mostra tutti i txtcmd
 def showtxtcmd(client, message):  # Soundboard
