@@ -166,9 +166,9 @@ def song(client, message):
         if file.endswith(".mp3"):
             os.rename(file, f"{title}.mp3")
     if message.reply_to_message is not None:
-        client.send_audio(message.chat.id, audio=f"{title}.mp3", reply_to_message_id=message.reply_to_message_id)
+        client.send_audio(message.chat.id, audio=f"{title}.mp3", reply_to_message_id=message.reply_to_message_id, title=title)
     else:
-        client.send_audio(message.chat.id, audio=f"{title}.mp3")
+        client.send_audio(message.chat.id, audio=f"{title}.mp3", title=title)
     client.delete_messages(message.chat.id, message.id, True)
     os.remove(f"{title}.mp3")
 

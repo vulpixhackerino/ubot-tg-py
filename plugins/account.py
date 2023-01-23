@@ -1,6 +1,7 @@
 from pyrogram import Client, filters
 from pyrogram.types import EmojiStatus
 from pyrogram.raw import functions, types
+from pyrogram.enums import UserStatus
 from datetime import datetime
 import os, pytz, time, math, atexit
 
@@ -9,6 +10,11 @@ clock = False
 fname = ""
 lname = ""
 
+@Client.on_message(filters.mentioned & filters.group)
+def reply(client, message):
+    me = client.get_users("me")
+    if me.status == UserStatus.OFFLINE:
+        client.send_message(message.chat.id, "Un attimo che sto offline...", reply_to_message_id=message.id)
 
 @Client.on_message(filters.command("backup", '-') & filters.me) # Backup dell'account in un qualsiasi momento (Include foto, nome, bio)
 def backup(client, message):
@@ -76,7 +82,6 @@ def clock(client, message):
                 first_name=fname,
                 last_name= lname + current_time
             )
-            print("Cambio user!")
         time.sleep(1)
 
 
